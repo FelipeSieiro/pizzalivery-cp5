@@ -27,6 +27,18 @@ export default function Flavours() {
   const navigate = useNavigate()
   const { pizzaSize, pizzaFlavour, setPizzaFlavour } = useContext(OrderContext)
   const [flavourId, setflavourId] = useState("")
+  const [selectedFlavours, setSelectedFlavours] = useState([]);
+
+  const handleSelectFlavours = (event) => {
+    const flavourId = event.target.id;
+    if (selectedFlavours.includes(flavourId)) {
+      setSelectedFlavours(selectedFlavours.filter((id) => id !== flavourId));
+    } else {
+      if (selectedFlavours.length < 2) {
+        setSelectedFlavours([...selectedFlavours, flavourId]);
+      }
+    }
+  };
 
   const flavoursOptions = [
     {

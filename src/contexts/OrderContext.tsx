@@ -9,6 +9,8 @@ type PizzaSizeType = {
 }
 
 type PizzaFlavourType = {
+  map(arg0: (flavour: any) => any): import("react").SetStateAction<never[]>
+  length: number
   id: string
   image: string
   name: string
