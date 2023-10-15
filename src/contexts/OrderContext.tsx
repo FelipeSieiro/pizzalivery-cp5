@@ -1,4 +1,4 @@
-import { createContext, useState } from "react"
+import { createContext, useContext, useState } from "react"
 
 type PizzaSizeType = {
   id: string
@@ -32,7 +32,6 @@ type PizzaOrderType = {
   }
   total: number
 }
-
 type OrderContextProps = {
   pizzaSize: PizzaSizeType
   setPizzaSize: React.Dispatch<React.SetStateAction<PizzaSizeType>>
@@ -42,12 +41,18 @@ type OrderContextProps = {
   setPizzaOrder: React.Dispatch<React.SetStateAction<PizzaOrderType>>
 }
 
+
 const OrderContext = createContext<OrderContextProps>({})
 
+
 const OrderContextProvider = ({ children }) => {
-  const [pizzaSize, setPizzaSize] = useState()
-  const [pizzaFlavour, setPizzaFlavour] = useState()
-  const [pizzaOrder, setPizzaOrder] = useState()
+  const [pizzaSize, setPizzaSize] = useState(null); // Inicialize com null ou um valor padrão apropriado
+  const [pizzaFlavour, setPizzaFlavour] = useState(null); // Inicialize com null ou um valor padrão apropriado
+  const [pizzaOrder, setPizzaOrder] = useState([0]); // Inicialize com um array vazio
+
+  const addPizzaToOrder = (pizza) => {
+    setPizzaOrder((prevOrder) => [...prevOrder, pizza]);
+  };
 
   return (
     <OrderContext.Provider
@@ -58,6 +63,7 @@ const OrderContextProvider = ({ children }) => {
         setPizzaFlavour,
         pizzaOrder,
         setPizzaOrder,
+        addPizzaToOrder,
       }}
     >
       {children}
@@ -65,5 +71,10 @@ const OrderContextProvider = ({ children }) => {
   )
 }
 
+
 export { OrderContextProvider }
 export default OrderContext
+
+export const useOrder = () => {
+  return useContext(OrderContext);
+};

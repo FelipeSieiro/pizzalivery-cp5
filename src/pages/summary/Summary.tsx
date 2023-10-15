@@ -19,7 +19,7 @@ import { Button } from "../../components/button/Button";
 
 export default function Summary() {
   const navigate = useNavigate();
-  const { pizzaSize, pizzaFlavour, setPizzaOrder } = useContext(OrderContext);
+  const { pizzaSize, pizzaFlavour, addPizzaToOrder } = useContext(OrderContext); // Use 'addPizzaToOrder' from context
   const [summaryData, setSummaryData] = useState([]);
   const [summaryAmount, setSummaryAmount] = useState(0);
 
@@ -28,28 +28,31 @@ export default function Summary() {
   }
 
   const handleNext = () => {
-    // Aqui, você pode criar um payload para todos os sabores selecionados
     const payload = pizzaFlavour.map((flavour) => ({
       item: {
-        name: flavour.name,
+        name: flavour.name, 
         image: flavour.image,
-        size: pizzaSize[0].text,
+        size: pizzaSize[0].text, 
         slices: pizzaSize[0].slices,
         value: flavour.price[pizzaSize[0].slices],
       },
       total: flavour.price[pizzaSize[0].slices],
     }));
 
-    setPizzaOrder(payload);
+    addPizzaToOrder(payload);
     navigate(routes.checkout);
+  }
+  
+  const handleNewItems = () => {
+    navigate(routes.pizzaSize);
   }
 
   useEffect(() => {
-    if (!pizzaFlavour) {
+    if (!pizzaFlavour || !pizzaFlavour.length) { 
       return navigate(routes.pizzaSize);
     }
 
-    if (!pizzaSize) {
+    if (!pizzaSize || !pizzaSize.length) { 
       return navigate(routes.home);
     }
 
@@ -62,11 +65,11 @@ export default function Summary() {
     }));
 
     setSummaryData(summaryData);
-  }, []);
+  }, [pizzaFlavour, pizzaSize]);
 
   useEffect(() => {
     const totalAmount = summaryData.reduce(
-      (total, flavour) => total + (flavour.price/2),
+      (total, flavour) => total + flavour.price/2,
       0
     );
 
@@ -94,6 +97,9 @@ export default function Summary() {
       <SummaryActionWrapper>
         <Button inverse="inverse" onClick={handleBack}>
           Voltar
+        </Button>
+        <Button inverse="newItems" onClick={handleNewItems}>
+          Adicionar Mais Itens
         </Button>
         <Button onClick={handleNext}>Ir para o pagamento</Button>
       </SummaryActionWrapper>
