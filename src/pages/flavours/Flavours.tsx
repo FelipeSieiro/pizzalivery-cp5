@@ -79,12 +79,19 @@ export default function Flavours() {
     },
   ];
 
+
   const getPizzaFlavour = (id) => {
     return flavoursOptions.find((flavour) => flavour.id === id);
   };
 
   const handleClick = (event) => {
     const id = event.target.id;
+
+  
+   
+    if (selectedFlavours.length === 2) {
+      return;
+    }
 
     if (selectedFlavours.includes(id)) {
       setSelectedFlavours((prevSelectedFlavours) =>
@@ -107,9 +114,9 @@ export default function Flavours() {
       setPizzaFlavour(selectedFlavoursData);
       navigate(routes.summary);
     } else {
-      alert("Escolha dois sabores")
+      alert("Escolha exatamente dois sabores.");
     }
-  };
+  }
 
   useEffect(() => {
     if (pizzaFlavour && pizzaFlavour.length > 0) {
